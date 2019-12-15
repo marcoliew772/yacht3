@@ -161,7 +161,7 @@
                 //     }
                 // }
 
-                const grayObjects = ['middle_body', 'top_body', 'middle_body001', 'bottom_body'/*, 'main_wall', 'middle_wall', 'middle_wall2'*/]
+                const grayObjects = ['middle_body', 'top_body', 'middle_body001',/* 'bottom_body'/*, 'main_wall', 'middle_wall', 'middle_wall2'*/]
                 if (grayObjects.indexOf(object3D.name) >= 0) {
                     object3D.material = new THREE.MeshPhongMaterial( { color: 0x3e4444 } );
                     object3D.material.side = THREE.DoubleSide;
