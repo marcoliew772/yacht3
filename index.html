@@ -120,7 +120,7 @@
                 console.log("USERDATA:", object3D.name, object3D.type, object3D.userData);
             } else {
                 console.log(object3D.name + " : " + object3D.type);
-                console.log(object3D.material);
+                console.log(object3D);
                 // 2.435, 2.494,  3.604, 
                 
                 // if (object3D.name.toUpperCase().indexOf('HANDLE') > -1) {
@@ -161,9 +161,13 @@
                 //     }
                 // }
 
-                const grayObjects = ['middle_body', 'top_body', 'middle_body001',/* 'bottom_body'/*, 'main_wall', 'middle_wall', 'middle_wall2'*/]
+                const grayObjects = ['middle_body', 'top_body', 'middle_body001', 'top_deck', 'bottom_body' /*, 'main_wall', 'middle_wall', 'middle_wall2'*/]
                 if (grayObjects.indexOf(object3D.name) >= 0) {
-                    object3D.material = new THREE.MeshPhongMaterial( { color: 0x3e4444 } );
+                    let matColor = 0x526677;
+                    if (object3D.name == 'bottom_body') {
+                        matColor = 0x263338;
+                    }
+                    object3D.material = new THREE.MeshPhongMaterial( { color: matColor } );
                     object3D.material.side = THREE.DoubleSide;
                 }
                 
@@ -218,11 +222,26 @@
             scene.background = new THREE.Color(0xa0a0a0);
             // scene.fog = new THREE.Fog(0xa0a0a0, 2000, 10000);
 
-            light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
-            //light = new THREE.DirectionalLight(0xffffff);
-            light.position.set(900, 10, 100);
+            // light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
+            light = new THREE.DirectionalLight(0xffffff, 0.8);
+            const targetObject = new THREE.Object3D();
+            targetObject.position.set(1200, 300, 200);
+            scene.add(targetObject);
+
+            light.position.set(1500, 200, 200);
+            light.target = targetObject;
             scene.add(light);
 
+            light = new THREE.DirectionalLight(0xffffff, 0.7);
+            const targetObject2 = new THREE.Object3D();
+            targetObject2.position.set(1200, 300, 200);
+            scene.add(targetObject2);
+
+            light.position.set(1000, 200, 200);
+            light.target = targetObject2;
+            scene.add(light);
+
+            /*
             light = new THREE.DirectionalLight(0xffffff);
             light.position.set(0, 200, 100);
             light.castShadow = true;
@@ -232,12 +251,14 @@
             light.shadow.camera.right = 120;
             scene.add(light);
 
-            light = new THREE.DirectionalLight(0xffffff);
-            light.position.set(10, 10, 100);
-            scene.add(light);
-
+            
             light = new THREE.DirectionalLight(0xffffff, 0.1);
             scene.add(light);
+            */
+            light = new THREE.DirectionalLight(0xffffff);
+            light.position.set(200, 600, 0);
+            scene.add(light);
+
 
             // Water
             var waterGeometry = new THREE.PlaneBufferGeometry(100000, 100000, 10, 10);
@@ -267,7 +288,8 @@
             // model
             var loader = new FBXLoader();
             // loader.load('models/fbx/myfile.fbx', function(object) {
-            loader.load('models/ship11.FBX', function (object) {
+            // loader.load('models/ship11.FBX', function (object) {
+            loader.load('models/ship11.fbx', function (object) {
                 parse3DObject(object);
 
                 // Check if we have animations to play.
@@ -283,7 +305,7 @@
                 scene.add(object);
 
                 // createCameraZoom(camera, 2 * 1000, endX, YachtEyeSettings.yachteye.modules.explore.cameraY || cameraY, 0).start();
-                const endX = 900, endY = 10, endZ = 1000, durationMs = 2000;
+                const endX = 900, endY = 10, endZ = 300, durationMs = 2000;
 
                 const tweenCamera = new TWEEN.Tween(camera.position)
                     .to({ x: endX, y: endY, z: endZ }, durationMs)
@@ -309,7 +331,7 @@
 
             uniforms[ 'turbidity' ].value = 10;
             uniforms[ 'rayleigh' ].value = 2;
-            uniforms[ 'luminance' ].value = 1;
+            uniforms[ 'luminance' ].value = 1.1;
             uniforms[ 'mieCoefficient' ].value = 0.005;
             uniforms[ 'mieDirectionalG' ].value = 0.8;
 
