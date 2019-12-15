@@ -137,20 +137,26 @@
 
                 if (object3D instanceof THREE.Mesh) {
                     if (object3D.material instanceof THREE.Material) {
-                        // object3D.material.transparent = true;
+                        object3D.material.transparent = true;
                         object3D.material.side = THREE.DoubleSide; // for testing.
                     }
                 }
                 if (object3D instanceof THREE.Mesh && object3D.name.startsWith("BUTTON_")) {
-                    yachtButtonArray.push(object3D);
-                    object3D.renderOrder = 999;
-                    object3D.onBeforeRender = function (renderer) { renderer.clearDepth(); };
-                    if (object3D.material instanceof THREE.Material) {
-                        object3D.material.transparent = true;
-                        // threejsObject.material.side = THREE.DoubleSide; // for testing.
-                    }
-                    else {
-                        console.warn("Unexpected Material array.", object3D.name);
+                    if (object3D.name == 'BUTTON_3') {
+                        yachtButtonArray.push(object3D);
+                        object3D.renderOrder = 999;
+                        object3D.onBeforeRender = function (renderer) { renderer.clearDepth(); };
+                        if (object3D.material instanceof THREE.Material) {
+                            object3D.material.transparent = true;
+                            // threejsObject.material.side = THREE.DoubleSide; // for testing.
+                        }
+                        else {
+                            console.warn("Unexpected Material array.", object3D.name);
+                        }
+                    } else {
+                        // skip other button
+                        object3D.visible = false;
+                        return;
                     }
                 }
                 else {
@@ -223,16 +229,16 @@
             // scene.fog = new THREE.Fog(0xa0a0a0, 2000, 10000);
 
             // light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
-            light = new THREE.DirectionalLight(0xffffff, 0.8);
+            light = new THREE.DirectionalLight(0xffffff, 1);
             const targetObject = new THREE.Object3D();
-            targetObject.position.set(1200, 300, 200);
+            targetObject.position.set(0, 100, 0);
             scene.add(targetObject);
 
-            light.position.set(1500, 200, 200);
+            light.position.set(200, 0, 0);
             light.target = targetObject;
             scene.add(light);
 
-            light = new THREE.DirectionalLight(0xffffff, 0.7);
+            light = new THREE.DirectionalLight(0xffffff, 1);
             const targetObject2 = new THREE.Object3D();
             targetObject2.position.set(1200, 300, 200);
             scene.add(targetObject2);
@@ -240,6 +246,11 @@
             light.position.set(1000, 200, 200);
             light.target = targetObject2;
             scene.add(light);
+
+            // 
+            light = new THREE.PointLight( 0xffff00, 1, 400 );
+            light.position.set( 0, 400, -300 );
+            scene.add( light );
 
             /*
             light = new THREE.DirectionalLight(0xffffff);
@@ -289,7 +300,7 @@
             var loader = new FBXLoader();
             // loader.load('models/fbx/myfile.fbx', function(object) {
             // loader.load('models/ship11.FBX', function (object) {
-            loader.load('models/ship11.FBX', function (object) {
+            loader.load('models/ship12.FBX', function (object) {
                 parse3DObject(object);
 
                 // Check if we have animations to play.
@@ -387,6 +398,8 @@
 
             window.addEventListener('resize', onWindowResize, false);
             // Event handlers for Explore button clicks.
+            
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
             document.addEventListener('mousedown', onDocumentMouseDown, false);
             document.addEventListener('mouseup', onDocumentMouseDown, false);
 
@@ -431,7 +444,7 @@
 
             // Control the visibility and orientation of the buttons.
             for (let index = 0, length = yachtButtonArray.length; index < length; index++) {
-                yachtButtonArray[index].material.opacity = sliderOpenFactor;
+                yachtButtonArray[index].material.opacity = 1; //sliderOpenFactor;
                 yachtButtonArray[index].rotation.y = (orbitControls.getAzimuthalAngle() /*- (Math.PI / 2)*/);
                 yachtButtonArray[index].rotation.z = -(orbitControls.getPolarAngle() - (Math.PI / 2));
             }
@@ -464,6 +477,59 @@
         var clicked3dObjectTimeStamp; // Timestamp of the mousedown.
         /** Custom action (optional) to be performed for buttons in the 3D model. */
         var onModelButtonClick;
+
+        function onDocumentMouseMove(event) {
+
+            event.preventDefault();
+
+            let mouse = new THREE.Vector2();
+
+            if (event.type === "mousemove") {
+
+                mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+                mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+            } else if (event.type === "touchmove" && (event.touches.length === 1)) {
+
+                let touch = event.touches.item(0);
+                mouse.x = (touch.clientX / renderer.domElement.clientWidth) * 2 - 1;
+                mouse.y = -(touch.clientY / renderer.domElement.clientHeight) * 2 + 1;
+            } else {
+
+                return;
+            }
+
+            let raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(mouse, camera);
+
+            // Only check visible buttons.
+            let visibleButtons = yachtButtonArray.filter((btn) => btn.material.opacity > 0.30);
+
+            let intersects = raycaster.intersectObjects(visibleButtons);
+
+            if (intersects.length > 0) {
+                // Scale the intersecting button.
+                yachtButtonArray.forEach(function (el) {
+                    if (el === intersects[0].object) {
+                        if (el.scale.x == 1.0) {
+                            el.scale.set(1.2, 1.2, 1.2);
+                            document.body.style.cursor = 'pointer';
+                        }
+                    } else {
+                        if (el.scale.x != 1.0) {
+                            el.scale.set(1.0, 1.0, 1.0);
+                        }
+                    }
+                });
+            } else {
+                document.body.style.cursor = 'default';
+                // No object below the pointer.
+                yachtButtonArray.forEach(function (el) {
+                    if (el.scale.x != 1.0) {
+                        el.scale.set(1.0, 1.0, 1.0);
+                    }
+                });
+            }
+        }
 
         function onDocumentMouseDown(event) {
             event.preventDefault();
@@ -510,7 +576,8 @@
                 // console.log("HIT OBJ FOUND AND CLICKED");
                 clicked3dObject = undefined;
 
-                alert(intersects[0].object.name);
+                // alert(intersects[0].object.name);
+                location.href= 'https://my.matterport.com/show/?m=7UbE3fxaU1k';
             }
         }
 
