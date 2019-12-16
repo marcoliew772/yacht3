@@ -114,7 +114,8 @@
         animate();
 
         function parse3DObject(object3D) {
-            console.log(object3D.name);
+            // console.log(object3D.name);
+            // return;
             
             if (object3D.name) {
                 if (object3D.name.indexOf("Laser") > -1 || object3D.name.indexOf("Radar_Laser") > -1) {
@@ -198,7 +199,7 @@
                     object3D.material.side = THREE.DoubleSide;
                 }
 
-                const metalAluminiums = ['top_rain', 'main_rail', 'bottom_rail', 'part1']
+                const metalAluminiums = ['top_rain', 'main_rail', 'bottom_rail', 'part1', 'part2', 'part3']
                 if (metalAluminiums.indexOf(object3D.name) >= 0) {
                     object3D.material = new THREE.MeshStandardMaterial( { color: 0xcccccc, metalness: 1} );
                     object3D.material.side = THREE.DoubleSide;
@@ -267,8 +268,9 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xa0a0a0);
+            // scene.background = new THREE.Color(0xa0a0a0);
             // scene.fog = new THREE.Fog(0xa0a0a0, 2000, 10000);
+
 
             // light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
             light = new THREE.DirectionalLight(0xffffff, 1);
@@ -293,24 +295,11 @@
 
             // 
             
-            // light = new THREE.PointLight( 0xffffff, 1, 0 );
-            // light.position.set( -50, 340, -150 );
-            // scene.add( light );
+            light = new THREE.PointLight( 0xffffff, 1, 0 );
+            light.position.set( -50, 340, -150 );
+            scene.add( light );
             
-            /*
-            light = new THREE.DirectionalLight(0xffffff);
-            light.position.set(0, 200, 100);
-            light.castShadow = true;
-            light.shadow.camera.top = 180;
-            light.shadow.camera.bottom = -100;
-            light.shadow.camera.left = -120;
-            light.shadow.camera.right = 120;
-            scene.add(light);
-
             
-            light = new THREE.DirectionalLight(0xffffff, 0.1);
-            scene.add(light);
-            */
             light = new THREE.DirectionalLight(0xffffff, 1);
             const targetObject3 = new THREE.Object3D();
             targetObject3.position.set(0, 0, 0);
@@ -320,9 +309,10 @@
             light.target = targetObject3;
             scene.add(light);
 
-            light = new THREE.DirectionalLight(0xffffff);
-            light.position.set(200, 600, 0);
+            light = new THREE.DirectionalLight(0xffffff, 0);
+            light.position.set(0, 600, 0);
             scene.add(light);
+            
 
 
             // Water
@@ -354,14 +344,14 @@
             var loader = new FBXLoader();
             // loader.load('models/fbx/myfile.fbx', function(object) {
             // loader.load('models/ship11.FBX', function (object) {
-            loader.load('models/ship46.FBX', function (object) {
+            loader.load('models/ship51.FBX', function (object) {
                 parse3DObject(object);
 
                 // Check if we have animations to play.
-                if (object.animations && object.animations.length > 0) {
-                    object.mixer = new THREE.AnimationMixer(object);
-                    mixers.push(object.mixer);
-                }
+                // if (object.animations && object.animations.length > 0) {
+                //     object.mixer = new THREE.AnimationMixer(object);
+                //     mixers.push(object.mixer);
+                // }
 
                 // });
 
@@ -406,7 +396,7 @@
                 azimuth: 0.205
             };
 
-            var cubeCamera = new THREE.CubeCamera( 0.1, 1, 512 );
+            var cubeCamera = new THREE.CubeCamera( 0.1, 1.2, 512 );
             cubeCamera.renderTarget.texture.generateMipmaps = true;
             cubeCamera.renderTarget.texture.minFilter = THREE.LinearMipmapLinearFilter;
 
