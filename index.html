@@ -173,7 +173,8 @@
                     if (object3D.name == 'bottom_body') {
                         matColor = 0x263338;
                     }
-                    object3D.material = new THREE.MeshPhongMaterial( { color: matColor } );
+                    // object3D.material = new THREE.MeshPhongMaterial( { color: matColor } );
+                    object3D.material = new THREE.MeshStandardMaterial( { color: matColor, metalness: 1 } );
                     object3D.material.side = THREE.DoubleSide;
                 }
                 
