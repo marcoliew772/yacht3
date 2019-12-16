@@ -42,8 +42,9 @@
             background: #ff8181;
             color: #FFF;
             width: 120px;
-            height: 120px;
-            line-height: 120px;
+            padding-top: 40px;
+            height: 80px;
+            line-height: 30px;
             border-radius: 50%;
             text-align: center;
             font-weight: bold;
@@ -72,7 +73,7 @@
 </head>
 
 <body>
-    <a href="https://my.matterport.com/show/?m=7UbE3fxaU1k" class="btn absolute-center" id="btn_click" >digital 3D twin</a>
+    <a href="https://my.matterport.com/show/?m=7UbE3fxaU1k" class="btn absolute-center" id="btn_click" >digital 3D<br /> twin</a>
     <script id="vertexShader" type="x-shader/x-vertex">
         uniform float time;
         uniform vec2 resolution;
@@ -120,7 +121,7 @@
         var handleObjects = [];
         var modelCameras = [];
         var yachtButtonArray = [];
-        const layers = ['bottom_body','middle_deck','middle_body',  'Container001','top_deck']
+        const layers = ['layer_bottom_body','layer_middle_deck','layer_middle_body',  'layer_main_deck','layer_top_deck']
         var slider;
         var orbitControls;
 
@@ -147,7 +148,7 @@
         animate();
 
         function parse3DObject(object3D) {
-            // console.log(object3D.name);
+            console.log(object3D.name, object3D.type);
             // return;
             
             if (object3D.name) {
@@ -168,11 +169,10 @@
             if (object3D.userData &&
                 Object.keys(object3D.userData).length > 0 &&
                 (object3D.userData.type)) {
-                console.log("USERDATA:", object3D.name, object3D.type, object3D.userData);
+                // console.log("USERDATA:", object3D.name, object3D.type, object3D.userData);
             } else {
-                console.log(object3D.name + " : " + object3D.type);
-                console.log(object3D);
-                // 2.435, 2.494,  3.604, 
+                // console.log(object3D.name + " : " + object3D.type);
+                // console.log(object3D);
                 
                 // if (object3D.name.toUpperCase().indexOf('HANDLE') > -1) {
                 //     if (object3D.name.toUpperCase().indexOf("HANDLE_YACHT") === -1) {
@@ -181,7 +181,7 @@
                 // }
                 if (layers.indexOf(object3D.name) >= 0 && object3D.type == 'Group') {
                     // console.log(object3D)
-                    console.log(object3D.name + ' ' + object3D.position.y);
+                    // console.log(object3D.name + ' ' + object3D.position.y);
                     handleObjects.push(object3D)
                     // object3D.visible = false
                 }
@@ -211,7 +211,7 @@
                     }
                 }
                 else {
-                    console.error("Unexpected Button type.", object3D.name);
+                    // console.error("Unexpected Button type.", object3D.name);
                 }
                 //     if (object3D.name.toUpperCase().indexOf("HANDLE_YACHT") === -1) {
                 //         handleObjects.push(object3D);
@@ -378,7 +378,7 @@
             var loader = new FBXLoader();
             // loader.load('models/fbx/myfile.fbx', function(object) {
             // loader.load('models/ship11.FBX', function (object) {
-            loader.load('models/ship51.FBX', function (object) {
+            loader.load('models/ship55.FBX', function (object) {
             // loader.load('http://crosspangaea.com/yacht/ship51.FBX', function (object) {
                 
                 parse3DObject(object);
@@ -401,10 +401,6 @@
                 const tweenCamera = new TWEEN.Tween(camera.position)
                     .to({ x: endX, y: endY, z: endZ }, durationMs)
                     .easing(TWEEN.Easing.Cubic.InOut);
-
-                tweenCamera.onComplete(() => {
-                    console.log(camera.position);
-                });
 
                 tweenCamera.start();
 
@@ -443,13 +439,13 @@
                 var theta = Math.PI * ( parameters.inclination - 0.5 ) ;
                 var phi = 2 * Math.PI * ( parameters.azimuth - 0.5 );
 
-                console.log('sun params', parameters, theta, phi)
+                // console.log('sun params', parameters, theta, phi)
 
                 light.position.x = parameters.distance * Math.cos( phi );
                 light.position.y = parameters.distance * Math.sin( phi ) * Math.sin( theta );
                 light.position.z = parameters.distance * Math.sin( phi ) * Math.cos( theta );
 
-                console.log('sun, position', light.position)
+                // console.log('sun, position', light.position)
 
                 sky.material.uniforms[ 'sunPosition' ].value = light.position.copy( light.position );
                 water.material.uniforms[ 'sunDirection' ].value.copy( light.position ).normalize();
@@ -507,11 +503,11 @@
             let maxSize = 20;
 
             const layer_pos_y_map = {
-                'bottom_body': 292.67755126953125,
-                'middle_body': 205.12078857421875,
-                'middle_deck': 252.90489196777344,
-                'Container001': 285.92578125,
-                'top_deck': 283.1562194824219
+                'layer_bottom_body': 292.67755126953125,
+                'layer_middle_body': 205.12078857421875,
+                'layer_middle_deck': 252.90489196777344,
+                'layer_main_deck': 285.92578125,
+                'layer_top_deck': 283.1562194824219
             };
 
             for (let index = 0, length = handleObjects.length; index < length; index++) {
