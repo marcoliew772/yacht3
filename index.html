@@ -35,11 +35,44 @@
             left: 3%;
             height: 20.0em;
         }
+
+        .btn{
+            display: inline-block;
+            text-decoration: none;
+            background: #ff8181;
+            color: #FFF;
+            width: 120px;
+            height: 120px;
+            line-height: 120px;
+            border-radius: 50%;
+            text-align: center;
+            font-weight: bold;
+            vertical-align: middle;
+            white-space: normal;
+            overflow: hidden;
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
+            border-bottom: solid 3px #bd6565;
+            transition: .4s;
+        }
+
+        .btn:active{
+            -ms-transform: translateY(2px);
+            -webkit-transform: translateY(2px);
+            transform: translateY(2px);
+            box-shadow: 0 0 1px rgba(0, 0, 0, 0.15);
+            border-bottom: none;
+        }
+        .absolute-center {
+            margin: auto;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+        }
     </style>
     <link rel="stylesheet" type="text/css" href="js/slider/nouislider.css">
 </head>
 
 <body>
+    <a href="https://my.matterport.com/show/?m=7UbE3fxaU1k" class="btn absolute-center" id="btn_click" >digital 3D twin</a>
     <script id="vertexShader" type="x-shader/x-vertex">
         uniform float time;
         uniform vec2 resolution;
@@ -160,7 +193,7 @@
                     }
                 }
                 if (object3D instanceof THREE.Mesh && object3D.name.startsWith("BUTTON_")) {
-                    if (object3D.name == 'BUTTON_3') {
+                    if (false && object3D.name == 'BUTTON_3') {
                         yachtButtonArray.push(object3D);
                         object3D.renderOrder = 999;
                         object3D.onBeforeRender = function (renderer) { renderer.clearDepth(); };
@@ -346,6 +379,8 @@
             // loader.load('models/fbx/myfile.fbx', function(object) {
             // loader.load('models/ship11.FBX', function (object) {
             loader.load('models/ship51.FBX', function (object) {
+            // loader.load('http://crosspangaea.com/yacht/ship51.FBX', function (object) {
+                
                 parse3DObject(object);
 
                 // Check if we have animations to play.
@@ -630,4 +665,5 @@
 
     </script>
 </body>
+
 </html>
