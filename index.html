@@ -40,6 +40,23 @@
 </head>
 
 <body>
+    <script id="vertexShader" type="x-shader/x-vertex">
+        uniform float time;
+        uniform vec2 resolution;
+        void main()	{
+            gl_Position = vec4( position, 1.0 );
+        }
+    </script>
+
+  <script id="fragmentShader" type="x-shader/x-fragment">
+        uniform float time;
+        uniform vec2 resolution;
+        void main()	{
+            float x = mod(time + gl_FragCoord.x, 20.) < 10. ? 1. : 0.;
+            float y = mod(time + gl_FragCoord.y, 20.) < 10. ? 1. : 0.;
+            gl_FragColor = vec4(vec3(min(x, y)), 1.);
+        }
+    </script>
     <script src="js/slider/nouislider.js"></script>
     <div id="controlDiv"></div>
 
@@ -98,7 +115,7 @@
 
         function parse3DObject(object3D) {
             console.log(object3D.name);
-
+            
             if (object3D.name) {
                 if (object3D.name.indexOf("Laser") > -1 || object3D.name.indexOf("Radar_Laser") > -1) {
                     if (object3D instanceof THREE.Mesh && object3D.material instanceof THREE.MeshLambertMaterial) {
@@ -166,17 +183,41 @@
                 //         handleObjects.push(object3D);
                 //     }
                 // }
-
-                const grayObjects = ['middle_body', 'top_body', 'middle_body001', 'top_deck', 'bottom_body' /*, 'main_wall', 'middle_wall', 'middle_wall2'*/]
-                if (grayObjects.indexOf(object3D.name) >= 0) {
-                    let matColor = 0x526677;
+                    
+                const grayObjects = ['middle_body', 'top_body', 'middle_body001', 'bottom_body',
+                    'top_deck', 'main_deck', 'bottom_deck', 'main_deck1', /*, 'main_wall', 'middle_wall', 'middle_wall2'*/]
+                if (grayObjects.indexOf(object3D.name) >= 0 /*&& object3D.type == 'Group'*/) {
+                    // let matColor = 0x526677;
+                    // let matColor = 0xCFC5C0;
+                    let matColor = 0xeeeed0;
+                    
                     if (object3D.name == 'bottom_body') {
-                        matColor = 0x263338;
+                        matColor = 0x111111;
                     }
-                    // object3D.material = new THREE.MeshPhongMaterial( { color: matColor } );
-                    object3D.material = new THREE.MeshStandardMaterial( { color: matColor, metalness: 1 } );
+                    object3D.material = new THREE.MeshStandardMaterial( { color: matColor, metalness: 0.8/*, roughness: 0.5*/} );
                     object3D.material.side = THREE.DoubleSide;
                 }
+
+                const metalAluminiums = ['top_rain', 'main_rail', 'bottom_rail', 'part1']
+                if (metalAluminiums.indexOf(object3D.name) >= 0) {
+                    object3D.material = new THREE.MeshStandardMaterial( { color: 0xcccccc, metalness: 1} );
+                    object3D.material.side = THREE.DoubleSide;
+                }
+
+                if (object3D.name == 'top_deck_board') {
+                    // var texture = new THREE.TextureLoader().load( "models/floor.jpg" );
+                    // texture.wrapS = THREE.RepeatWrapping;
+                    // texture.wrapT = THREE.RepeatWrapping;
+                    // texture.repeat.set( 20, 20 );
+                    // object3D.material = new THREE.MeshPhongMaterial( { map: texture } );
+                    // return;
+                }
+
+                // const chairs = ['top_chair']
+                // if (chairs.indexOf(object3D.name) >= 0) {
+                //     object3D.material = new THREE.MeshStandardMaterial( { color: 0xff0000, metalness: 0} );
+                //     object3D.material.side = THREE.DoubleSide;
+                // }
                 
 
                 // Cameras.
@@ -239,20 +280,23 @@
             light.target = targetObject;
             scene.add(light);
 
+            
             light = new THREE.DirectionalLight(0xffffff, 1);
             const targetObject2 = new THREE.Object3D();
             targetObject2.position.set(1200, 300, 200);
             scene.add(targetObject2);
 
-            light.position.set(1000, 200, 200);
+            light.position.set(900, 200, 200);
             light.target = targetObject2;
             scene.add(light);
+            
 
             // 
-            light = new THREE.PointLight( 0xffff00, 1, 400 );
-            light.position.set( 0, 400, -300 );
-            scene.add( light );
-
+            
+            // light = new THREE.PointLight( 0xffffff, 1, 0 );
+            // light.position.set( -50, 340, -150 );
+            // scene.add( light );
+            
             /*
             light = new THREE.DirectionalLight(0xffffff);
             light.position.set(0, 200, 100);
@@ -267,6 +311,15 @@
             light = new THREE.DirectionalLight(0xffffff, 0.1);
             scene.add(light);
             */
+            light = new THREE.DirectionalLight(0xffffff, 1);
+            const targetObject3 = new THREE.Object3D();
+            targetObject3.position.set(0, 0, 0);
+            scene.add(targetObject3);
+            
+            light.position.set(0, 900, 0);
+            light.target = targetObject3;
+            scene.add(light);
+
             light = new THREE.DirectionalLight(0xffffff);
             light.position.set(200, 600, 0);
             scene.add(light);
@@ -301,7 +354,7 @@
             var loader = new FBXLoader();
             // loader.load('models/fbx/myfile.fbx', function(object) {
             // loader.load('models/ship11.FBX', function (object) {
-            loader.load('models/ship12.FBX?v=2', function (object) {
+            loader.load('models/ship46.FBX', function (object) {
                 parse3DObject(object);
 
                 // Check if we have animations to play.
