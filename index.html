@@ -31,7 +31,7 @@
 
         #controlDiv {
             position: absolute;
-            top: 50%;
+            top: 30%;
             left: 3%;
             height: 20.0em;
         }
@@ -39,11 +39,11 @@
         .btn{
             display: inline-block;
             text-decoration: none;
-            background: #ff8181;
+            background: #3930e8;
             color: #FFF;
-            width: 120px;
-            padding-top: 40px;
-            height: 80px;
+            width: 80px;
+            padding-top: 20px;
+            height: 60px;
             line-height: 30px;
             border-radius: 50%;
             text-align: center;
@@ -52,7 +52,7 @@
             white-space: normal;
             overflow: hidden;
             box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
-            border-bottom: solid 3px #bd6565;
+            border-bottom: solid 3px #515dcc;
             transition: .4s;
         }
 
@@ -66,7 +66,7 @@
         .absolute-center {
             margin: auto;
             position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
+            top: -200px; left: 0; bottom: 0; right: 0;
         }
     </style>
     <link rel="stylesheet" type="text/css" href="js/slider/nouislider.css">
@@ -221,6 +221,9 @@
                 const grayObjects = ['middle_body', 'top_body', 'middle_body001', 'bottom_body',
                     'top_deck', 'main_deck', 'bottom_deck', 'main_deck1', /*, 'main_wall', 'middle_wall', 'middle_wall2'*/]
                 if (grayObjects.indexOf(object3D.name) >= 0 /*&& object3D.type == 'Group'*/) {
+                    // let matColor = 0x526677;
+                    // let matColor = 0xCFC5C0;
+                    // let matColor = 0xcccca0;
                     let matColor = 0xddddcd;
                     
                     if (object3D.name == 'bottom_body') {
@@ -498,7 +501,7 @@
             let range = slider.options.range.max - slider.options.range.min;
             let value = slider.get();
             let sliderOpenFactor = ((range - value) / range);
-            let maxSize = 20;
+            let maxSize = 30;
 
             const layer_pos_y_map = {
                 'layer_bottom_body': 292.67755126953125,
