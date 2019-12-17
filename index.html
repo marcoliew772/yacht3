@@ -194,7 +194,7 @@
                     object3D.material.visible = false;
                 }
 
-                if (object3D.name == 'BUTTON_start') {
+                if (object3D.name == 'top_deck') {
                     button_obj = object3D;
                 }
             }
@@ -585,11 +585,13 @@
                 orbitControls.update();
             }
 
-            console.log(button_obj)
-            const pos_btn = toScreenPosition(button_obj, camera);
-            document.getElementById("btn_click").style.top = (pos_btn.y- 30) + "px";
-            document.getElementById("btn_click").style.left = (pos_btn.x - 30) + "px";
-
+            // console.log(button_obj)
+            if (button_obj) {
+                const pos_btn = toScreenPosition(button_obj, camera);
+                document.getElementById("btn_click").style.top = (pos_btn.y) + "px";
+                document.getElementById("btn_click").style.left = (pos_btn.x) + "px";
+            }
+            
             renderer.render(scene, camera);
 
             stats.update();
