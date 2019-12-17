@@ -121,7 +121,7 @@
         var handleObjects = [];
         var modelCameras = [];
         var yachtButtonArray = [];
-        const layers = ['layer_bottom_body','layer_middle_deck','layer_middle_body',  'layer_main_deck','layer_top_deck']
+        const layers = ['LAYER_5', 'LAYER_4', 'LAYER_3', 'LAYER_2', 'LAYER_1']; // ['layer_bottom_body','layer_middle_deck','layer_middle_body',  'layer_main_deck','layer_top_deck']
         var slider;
         var orbitControls;
 
@@ -229,8 +229,8 @@
                     if (object3D.name == 'bottom_body') {
                         matColor = 0x111111;
                     }
-                    object3D.material = new THREE.MeshStandardMaterial( { color: matColor, metalness: 0.8/*, roughness: 0.5*/} );
-                    object3D.material.side = THREE.DoubleSide;
+                    // object3D.material = new THREE.MeshStandardMaterial( { color: matColor, metalness: 0.3/*, roughness: 0.5*/} );
+                    // object3D.material.side = THREE.DoubleSide;
                 }
 
                 const metalAluminiums = ['top_rain', 'main_rail', 'bottom_rail', 'part1', 'part2', 'part3']
@@ -238,6 +238,12 @@
                     object3D.material = new THREE.MeshStandardMaterial( { color: 0xcccccc, metalness: 1} );
                     object3D.material.side = THREE.DoubleSide;
                 }
+
+                // const poolMesh = ['pool']
+                // if (poolMesh.indexOf(object3D.name) >= 0) {
+                //     object3D.material = new THREE.MeshStandardMaterial( { color: 0x0000FF, metalness: 0.3} );
+                //     object3D.material.side = THREE.DoubleSide;
+                // }
 
                 if (object3D.name == 'top_deck_board') {
                     // var texture = new THREE.TextureLoader().load( "models/floor.jpg" );
@@ -305,7 +311,7 @@
             // scene.background = new THREE.Color(0xa0a0a0);
             // scene.fog = new THREE.Fog(0xa0a0a0, 2000, 10000);
 
-            var ambientLight = new THREE.AmbientLight( 0xffffff, 2 ); // soft white light
+            var ambientLight = new THREE.AmbientLight( 0xffffee, 2.5 ); // soft white light
             scene.add( ambientLight );
 
             // light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
@@ -319,7 +325,7 @@
             scene.add(light);
 
             
-            light = new THREE.DirectionalLight(0xffffff, 0.3);
+            light = new THREE.DirectionalLight(0xffffff, 1);
             const targetObject2 = new THREE.Object3D();
             targetObject2.position.set(1200, 300, 200);
             scene.add(targetObject2);
@@ -331,12 +337,12 @@
 
             // 
             
-            light = new THREE.PointLight( 0xffffff, 1, 0 );
-            light.position.set( -50, 340, -150 );
-            scene.add( light );
+            // light = new THREE.PointLight( 0xffffff, 1, 0 );
+            // light.position.set( -50, 340, -150 );
+            // scene.add( light );
             
             
-            light = new THREE.DirectionalLight(0xffffff, 1);
+            light = new THREE.DirectionalLight(0xffffff, 0.8);
             const targetObject3 = new THREE.Object3D();
             targetObject3.position.set(0, 0, 0);
             scene.add(targetObject3);
@@ -366,7 +372,8 @@
                 alpha: 1.0, // original 1.0
                 sunDirection: light.position.clone().normalize(),
                 sunColor: 0x7070ff,
-                waterColor: 0x001e0f, // original 0x464C58
+                // waterColor: 0x001e0f, // original 0x464C58
+                waterColor: 0x001e0f,
                 distortionScale: 0.9, // original 1
                 fog: scene.fog !== undefined
             }
@@ -379,7 +386,7 @@
             var loader = new FBXLoader();
             // loader.load('models/fbx/myfile.fbx', function(object) {
             // loader.load('models/ship11.FBX', function (object) {
-            loader.load('models/ship57.FBX', function (object) {
+            loader.load('models/ship63.FBX', function (object) {
             // loader.load('http://crosspangaea.com/yacht/ship51.FBX', function (object) {
                 
                 parse3DObject(object);
@@ -504,11 +511,11 @@
             let maxSize = 30;
 
             const layer_pos_y_map = {
-                'layer_bottom_body': 292.67755126953125,
-                'layer_middle_body': 205.12078857421875,
-                'layer_middle_deck': 252.90489196777344,
-                'layer_main_deck': 285.92578125,
-                'layer_top_deck': 283.1562194824219
+                'LAYER_5': 292.67755126953125,
+                'LAYER_4': 205.12078857421875,
+                'LAYER_3': 252.90489196777344,
+                'LAYER_2': 285.92578125,
+                'LAYER_1': 283.1562194824219
             };
 
             for (let index = 0, length = handleObjects.length; index < length; index++) {
